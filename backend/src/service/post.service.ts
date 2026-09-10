@@ -100,7 +100,8 @@ export async function searchPost(options: GetPostsOptions = {}) {
   return getPosts(options);
 }
 
-export async function accessPost(uid: string) {
+export async function accessPost(uid: string, userid = undefined) {
+  // for personal RL STATE UPDATE.
   const post = await getPostById(uid);
   if (!post) {
     throw new Error("Post not found");
@@ -111,4 +112,3 @@ export async function accessPost(uid: string) {
 export async function reactToPost(postId: string, userId: string, type = "LIKE") {
   return togglePostReaction(postId, userId, type);
 }
-
