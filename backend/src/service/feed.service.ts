@@ -1,30 +1,27 @@
 import { getRandomPostsSample, getPostRecommendations, getPosts } from "../repo/post.repo.js";
+import { getUserStrategyJson } from "../repo/user.repo.js";
 import { prisma } from "../db.js";
 import { UserReact, FeedOptions } from "@epsilonfeed/shared";
-
+import { strategy } from "sharp";
+import feedPolicy from "./feedPolicy/index.js";
 export type { UserReact, FeedOptions };
 
 /**
  * Serves non-deterministic / randomized feed posts for infinite scrolling
  */
-export async function getFeedByUser(uid?: string | null, options: FeedOptions = {}) {
-  const { limit = 10, excludeIds = [], tag, mode = "random" } = options;
+ export async function getFeedByUser(uid: string) {
+   const { strategy: rawStrategy, params } = await getUserStrategyJson(uid);
 
-  if (tag) {
-    const res = await getPosts({ tag, limit, excludeIds });
-    return res.posts;
-  }
+   // 1. 如果 rawStrategy 存在且在 table 內，就取該 handler，否則 fallback 回 default
+   const strategy = (rawStrategy ? feedPolicy[rawStrategy] : undefined) ?? feedPolicy.default;
 
-  if (mode === "latest") {
-    const res = await getPosts({ limit, excludeIds });
-    return res.posts;
-  }
+   // 2. 雙重保險：如果連 feedPolicy.default 都沒配，直接拋明確錯誤避免 TypeError
+   if (!strategy) {
+     throw new Error('Default feed strategy is not configured.');
+   }
 
-  // Non-deterministic random feed sampling
-  const sample = await getRandomPostsSample(limit, excludeIds);
-  return sample;
-}
-
+   return strategy(uid, params);
+ }
 /**
  * Returns "You May Also Like" post recommendations for the bottom of a post
  */
@@ -49,4 +46,3 @@ export async function syncReact(react: UserReact) {
 
   return { success: true, userId, postId, type };
 }
-

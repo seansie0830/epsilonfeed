@@ -355,3 +355,6 @@ export async function getPostRecommendations(postId: string, limit = 3) {
   return recommended;
 }
 
+export async function getTopKsimPostByVec(vec: Buffer, limit = 6) {
+
+}

@@ -58,6 +58,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     loadingMore,
     hasMore,
     error,
+    retryAttempt,
+    maxAttempts,
+    isRetrying,
     fetchMorePosts,
     refreshFeed,
     addPostOptimistic,
@@ -66,7 +69,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     tag: activeTag,
     searchQuery,
     mode: feedMode,
-    limit: 6
+    limit: 6,
+    maxAttempts: 3,
+    initialBackoffMs: 1000,
+    maxBackoffMs: 8000,
+    backoffFactor: 2
   });
 
   // IntersectionObserver for Infinite Scroll Sentinel
@@ -183,19 +190,32 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             </button>
           </div>
 
+          {/* Retry in progress banner with exponential backoff status */}
+          {isRetrying && (
+            <div className="p-4 my-4 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-amber-300 text-sm flex items-center gap-3 animate-pulse">
+              <Loader2 className="w-5 h-5 animate-spin text-amber-400 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="font-semibold">Reconnecting to feed stream...</p>
+                <p className="text-xs text-amber-400/90">
+                  Attempt {retryAttempt} of {maxAttempts} — Retrying with exponential backoff
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Error Message */}
-          {error && (
+          {error && !isRetrying && (
             <div className="p-4 my-4 rounded-2xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-sm flex items-center gap-3">
               <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-400" />
               <div className="flex-1">
                 <p className="font-semibold">Failed to load feed</p>
-                <p className="text-xs text-rose-400/90">{error}</p>
+                <p className="text-xs text-rose-400/90">{error} (Exceeded {maxAttempts} attempts)</p>
               </div>
               <button
                 onClick={() => refreshFeed()}
                 className="px-3 py-1 bg-rose-800/40 hover:bg-rose-700/60 rounded-xl text-xs font-semibold"
               >
-                Retry
+                Retry Now
               </button>
             </div>
           )}
