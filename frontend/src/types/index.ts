@@ -32,6 +32,7 @@ export interface Reaction {
 
 export interface Post {
   uid: string;
+  feedItemId?: string;
   text: string;
   authorId: string | null;
   author?: User | null;

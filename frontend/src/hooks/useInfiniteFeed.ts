@@ -24,6 +24,12 @@ export function useInfiniteFeed({
   // Track loaded post IDs to prevent duplicates in randomized feed
   const seenIdsRef = useRef<Set<string>>(new Set());
 
+  // Generate unique item instance key to prevent React DOM key collision on recycled/repeated posts
+  const attachFeedKey = (p: Post): Post => ({
+    ...p,
+    feedItemId: `${p.uid}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
+  });
+
   // Load initial batch
   const fetchInitialPosts = useCallback(async () => {
     setLoading(true);
@@ -38,12 +44,11 @@ export function useInfiniteFeed({
           mode: "latest",
           limit: 20
         });
-        const filtered = res.posts.filter((p) =>
-          p.text.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const filtered = res.posts
+          .filter((p) => p.text.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(attachFeedKey);
         setPosts(filtered);
         setHasMore(false);
-        filtered.forEach((p) => seenIdsRef.current.add(p.uid));
       } else {
         const res = await api.getFeed({
           limit,
@@ -51,8 +56,9 @@ export function useInfiniteFeed({
           mode,
           exclude: []
         });
-        setPosts(res.posts);
-        setHasMore(res.posts.length >= limit);
+        const postsWithKeys = res.posts.map(attachFeedKey);
+        setPosts(postsWithKeys);
+        setHasMore(res.posts.length > 0);
         res.posts.forEach((p) => seenIdsRef.current.add(p.uid));
       }
     } catch (err: any) {
@@ -79,23 +85,24 @@ export function useInfiniteFeed({
       });
 
       if (res.posts.length === 0) {
-        setHasMore(false);
-      } else {
-        setPosts((prev) => {
-          const newPosts = res.posts.filter((p) => !seenIdsRef.current.has(p.uid));
-          newPosts.forEach((p) => seenIdsRef.current.add(p.uid));
-          return [...prev, ...newPosts];
-        });
-        if (res.posts.length < limit) {
+        // In dev / random mode, if empty, reset seen IDs and allow continuous repeating
+        if (mode === "random" && posts.length > 0) {
+          seenIdsRef.current.clear();
+        } else {
           setHasMore(false);
         }
+      } else {
+        const newPostsWithKeys = res.posts.map(attachFeedKey);
+        res.posts.forEach((p) => seenIdsRef.current.add(p.uid));
+        setPosts((prev) => [...prev, ...newPostsWithKeys]);
+        setHasMore(true);
       }
     } catch (err: any) {
       console.error("Fetch more posts error:", err);
     } finally {
       setLoadingMore(false);
     }
-  }, [loading, loadingMore, hasMore, tag, mode, limit, searchQuery]);
+  }, [loading, loadingMore, hasMore, tag, mode, limit, searchQuery, posts.length]);
 
   useEffect(() => {
     fetchInitialPosts();

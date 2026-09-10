@@ -236,10 +236,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               )}
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-4">
               {posts.map((post) => (
                 <PostPreviewCard
-                  key={post.uid}
+                  key={post.feedItemId || post.uid}
                   post={post}
                   currentUser={currentUser}
                   onDelete={deletePostOptimistic}

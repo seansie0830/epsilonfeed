@@ -225,25 +225,33 @@ export async function togglePostReaction(postId: string, userId: string, type = 
 
 /**
  * Returns a randomized non-deterministic sample of posts for the feed stream.
+ * In dev mode, if all posts have been seen, it recycles and samples across the full pool.
  */
 export async function getRandomPostsSample(limit = 10, excludeIds: string[] = []) {
-  const totalCount = await prisma.post.count({
+  let count = await prisma.post.count({
     where: {
-      uid: { notIn: excludeIds }
+      ...(excludeIds.length > 0 ? { uid: { notIn: excludeIds } } : {})
     }
   });
 
-  if (totalCount === 0) return [];
+  // If all posts were excluded, allow repeat sampling across the entire post collection
+  let effectiveExclude = excludeIds;
+  if (count === 0) {
+    count = await prisma.post.count();
+    effectiveExclude = [];
+  }
+
+  if (count === 0) return [];
 
   // Random offset sampling to get non-deterministic feed items
-  const maxSkip = Math.max(0, totalCount - limit);
+  const maxSkip = Math.max(0, count - limit);
   const randomSkip = Math.floor(Math.random() * (maxSkip + 1));
 
   const posts = await prisma.post.findMany({
     where: {
-      uid: { notIn: excludeIds }
+      ...(effectiveExclude.length > 0 ? { uid: { notIn: effectiveExclude } } : {})
     },
-    take: limit * 2, // Fetch slightly larger pool and shuffle
+    take: limit * 2, // Fetch pool and shuffle
     skip: randomSkip,
     include: {
       author: {
@@ -277,6 +285,7 @@ export async function getRandomPostsSample(limit = 10, excludeIds: string[] = []
 
   return posts.slice(0, limit);
 }
+
 
 /**
  * Returns recommendations for the bottom of a post ("You May Also Like")
