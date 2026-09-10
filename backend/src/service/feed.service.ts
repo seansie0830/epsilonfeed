@@ -1,19 +1,8 @@
 import { getRandomPostsSample, getPostRecommendations, getPosts } from "../repo/post.repo.js";
 import { prisma } from "../db.js";
+import { UserReact, FeedOptions } from "@epsilonfeed/shared";
 
-export interface UserReact {
-  userId: string;
-  postId: string;
-  type: "LIKE" | "DISLIKE" | "HEART" | "BOOKMARK";
-  weight?: number;
-}
-
-export interface FeedOptions {
-  limit?: number;
-  excludeIds?: string[];
-  tag?: string;
-  mode?: "random" | "latest" | "trending";
-}
+export type { UserReact, FeedOptions };
 
 /**
  * Serves non-deterministic / randomized feed posts for infinite scrolling

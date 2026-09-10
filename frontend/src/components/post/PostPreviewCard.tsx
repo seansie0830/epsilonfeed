@@ -36,7 +36,7 @@ export const PostPreviewCard: React.FC<PostPreviewCardProps> = ({
   const isAdmin = currentUser?.roles === "ADMIN";
 
   // Time format helper
-  const formatTime = (isoString: string) => {
+  const formatTime = (isoString: string | Date) => {
     try {
       const date = new Date(isoString);
       const now = new Date();

@@ -103,7 +103,7 @@ export const PostDetailPage: React.FC<PostDetailPageProps> = ({ currentUser }) =
     }
   };
 
-  const formatTime = (isoString: string) => {
+  const formatTime = (isoString: string | Date) => {
     try {
       const date = new Date(isoString);
       return date.toLocaleDateString(undefined, {

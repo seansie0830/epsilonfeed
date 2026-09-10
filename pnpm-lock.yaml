@@ -219,6 +219,9 @@ importers:
 
   backend:
     dependencies:
+      '@epsilonfeed/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@prisma/client':
         specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
@@ -274,6 +277,9 @@ importers:
 
   frontend:
     dependencies:
+      '@epsilonfeed/shared':
+        specifier: workspace:*
+        version: link:../shared
       axios:
         specifier: ^1.7.9
         version: 1.20.0(debug@4.4.3)
@@ -329,6 +335,12 @@ importers:
       vite:
         specifier: ^6.1.0
         version: 6.4.3(@types/node@22.20.1)(jiti@1.21.7)(tsx@4.23.13)
+
+  shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
 
 packages:
 

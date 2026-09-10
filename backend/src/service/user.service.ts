@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createUser, getUserByUsernameWithPwd, getUserById } from "../repo/user.repo.js";
+import { AuthResponse } from "@epsilonfeed/shared";
 
 const JWT_SECRET = process.env.JWT_SECRET || "epsilonfeed_super_secret_jwt_key_2026";
 
-export async function register(username: string, password: string,displayName?: string) {
+export async function register(username: string, password: string, displayName?: string): Promise<AuthResponse> {
   const existing = await getUserByUsernameWithPwd(username);
   if (existing) {
     throw new Error("Username already taken");
@@ -28,7 +29,7 @@ export async function register(username: string, password: string,displayName?: 
   return { user, token };
 }
 
-export async function getJWTtoken(username: string, pwd: string) {
+export async function getJWTtoken(username: string, pwd: string): Promise<AuthResponse> {
   const user = await getUserByUsernameWithPwd(username);
   if (!user) {
     throw new Error("Invalid username or password");

@@ -47,7 +47,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Time format helper
-  const formatTime = (isoString: string) => {
+  const formatTime = (isoString: string | Date) => {
     try {
       const date = new Date(isoString);
       const now = new Date();

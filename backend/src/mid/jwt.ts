@@ -1,14 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../service/user.service.js";
+import { User } from "@epsilonfeed/shared";
 
 export interface AuthenticatedRequest extends Request {
-  user?: {
-    uid: string;
-    username: string;
-    displayName: string | null;
-    avatarUrl: string | null;
-    roles: string;
-  } | null;
+  user?: User | null;
 }
 
 export async function authenticateOptional(

@@ -1,14 +1,7 @@
 import { prisma } from "../db.js";
+import { GetPostsOptions } from "@epsilonfeed/shared";
 
-export interface GetPostsOptions {
-  id?: string;
-  authorId?: string;
-  tag?: string;
-  search?: string;
-  limit?: number;
-  offset?: number;
-  excludeIds?: string[];
-}
+export type { GetPostsOptions };
 
 export async function getPosts(options: GetPostsOptions = {}) {
   const {

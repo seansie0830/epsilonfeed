@@ -80,3 +80,25 @@ export async function getVecById(id: string) {
   return user?.vec;
 }
 
+export async function updateUserById(
+  id: string,
+  data: {
+    displayName?: string;
+    avatarUrl?: string;
+    roles?: string;
+    strategy?: string;
+  }
+) {
+  return prisma.user.update({
+    where: { uid: id },
+    data,
+    select: {
+      uid: true,
+      username: true,
+      displayName: true,
+      avatarUrl: true,
+      roles: true,
+      createdAt: true
+    }
+  });
+}
