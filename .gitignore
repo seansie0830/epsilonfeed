@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build and distribution outputs
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# SQLite databases and journals
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Uploaded user media (preserve directory via .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-workspace
+*.sublime-project

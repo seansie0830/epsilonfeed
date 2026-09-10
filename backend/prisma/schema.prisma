@@ -1,0 +1,68 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  uid         String     @id @default(uuid())
+  username    String     @unique
+  displayName String?
+  avatarUrl   String?
+  hashedPwd   String
+  salt        Bytes?
+  roles       String     @default("USER")
+  strategy    String     @default("default")
+  vec         Bytes?
+  posts       Post[]
+  reactions   Reaction[]
+  createdAt   DateTime   @default(now())
+}
+
+model Post {
+  uid        String     @id @default(uuid())
+  text       String
+  authorId   String?
+  author     User?      @relation(fields: [authorId], references: [uid], onDelete: Cascade)
+  createAt   DateTime   @default(now())
+  updateAt   DateTime   @updatedAt
+  vec        Bytes?
+  tags       Tags[]
+  reactions  Reaction[]
+  media      Media[]
+}
+
+model Tags {
+  uid   String @id @default(uuid())
+  text  String @unique
+  posts Post[]
+}
+
+model Media {
+  uid       String   @id @default(uuid())
+  url       String
+  filename  String
+  mimeType  String   @default("image/webp")
+  width     Int?
+  height    Int?
+  size      Int?
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [uid], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model Reaction {
+  uid       String   @id @default(uuid())
+  type      String   @default("LIKE")
+  userId    String
+  user      User     @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [uid], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId, type])
+}
+
