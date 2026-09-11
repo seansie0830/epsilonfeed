@@ -1,0 +1,16 @@
+﻿services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: epsilonfeed_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: epsilonfeed
+    ports:
+      - "5433:5432"
+    volumes:
+      - epsilonfeed_pgdata:/var/lib/postgresql/data
+
+volumes:
+  epsilonfeed_pgdata:

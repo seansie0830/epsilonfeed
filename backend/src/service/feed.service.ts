@@ -39,7 +39,7 @@ export async function syncReact(react: UserReact) {
   // Placeholder for vector preference update
   const user = await prisma.user.findUnique({
     where: { uid: userId },
-    select: { vec: true, strategy: true }
+    select: { strategy: true }
   });
 
   // Log or update strategy json

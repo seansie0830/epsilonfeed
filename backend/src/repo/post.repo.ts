@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db.js";
 import { GetPostsOptions } from "@epsilonfeed/shared";
 
@@ -355,6 +356,78 @@ export async function getPostRecommendations(postId: string, limit = 3) {
   return recommended;
 }
 
-export async function getTopKsimPostByVec(vec: Buffer, limit = 6) {
+export async function getTopKsimPostByVec(
+  vec: number[] | Float32Array,
+  limit = 6,
+  excludeIds: string[] = []
+) {
+  const vecArray = Array.isArray(vec) ? vec : Array.from(vec);
+  const vectorStr = `[${vecArray.join(",")}]`;
+  const excludeCondition =
+    excludeIds.length > 0
+      ? Prisma.sql`AND uid NOT IN (${Prisma.join(excludeIds)})`
+      : Prisma.empty;
 
+  const rawPosts = await prisma.$queryRaw<
+    Array<{
+      uid: string;
+      similarity: number;
+    }>
+  >`
+    SELECT 
+      uid,
+      1 - (vec <=> ${vectorStr}::vector) AS similarity
+    FROM "Post"
+    WHERE vec IS NOT NULL
+      ${excludeCondition}
+    ORDER BY vec <=> ${vectorStr}::vector ASC
+    LIMIT ${limit};
+  `;
+
+  if (rawPosts.length === 0) return [];
+
+  const postIds = rawPosts.map((p) => p.uid);
+  const fullPosts = await prisma.post.findMany({
+    where: { uid: { in: postIds } },
+    include: {
+      author: {
+        select: {
+          uid: true,
+          username: true,
+          displayName: true,
+          avatarUrl: true
+        }
+      },
+      tags: true,
+      media: true,
+      reactions: {
+        select: {
+          uid: true,
+          type: true,
+          userId: true
+        }
+      },
+      _count: {
+        select: { reactions: true }
+      }
+    }
+  });
+
+  const postMap = new Map(fullPosts.map((p) => [p.uid, p]));
+  return rawPosts
+    .map((r) => {
+      const p = postMap.get(r.uid);
+      return p ? { ...p, similarity: r.similarity } : null;
+    })
+    .filter(Boolean);
+}
+
+export async function updatePostVec(id: string, vec: number[] | Float32Array) {
+  const vecArray = Array.isArray(vec) ? vec : Array.from(vec);
+  const vectorStr = `[${vecArray.join(",")}]`;
+  await prisma.$executeRaw`
+    UPDATE "Post"
+    SET vec = ${vectorStr}::vector, "updateAt" = NOW()
+    WHERE uid = ${id};
+  `;
 }

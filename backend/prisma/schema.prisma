@@ -1,38 +1,40 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 model User {
-  uid         String     @id @default(uuid())
-  username    String     @unique
+  uid         String                      @id @default(uuid())
+  username    String                      @unique
   displayName String?
   avatarUrl   String?
   hashedPwd   String
   salt        Bytes?
-  roles       String     @default("USER")
-  strategy    String     @default("default")
-  vec         Bytes?
+  roles       String                      @default("USER")
+  strategy    String                      @default("default")
+  vec         Unsupported("vector(768)")?
   posts       Post[]
   reactions   Reaction[]
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime                    @default(now())
 }
 
 model Post {
-  uid        String     @id @default(uuid())
-  text       String
-  authorId   String?
-  author     User?      @relation(fields: [authorId], references: [uid], onDelete: Cascade)
-  createAt   DateTime   @default(now())
-  updateAt   DateTime   @updatedAt
-  vec        Bytes?
-  tags       Tags[]
-  reactions  Reaction[]
-  media      Media[]
+  uid       String                      @id @default(uuid())
+  text      String
+  authorId  String?
+  author    User?                       @relation(fields: [authorId], references: [uid], onDelete: Cascade)
+  createAt  DateTime                    @default(now())
+  updateAt  DateTime                    @updatedAt
+  vec       Unsupported("vector(768)")?
+  tags      Tags[]
+  reactions Reaction[]
+  media     Media[]
 }
 
 model Tags {

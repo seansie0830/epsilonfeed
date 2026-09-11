@@ -82,12 +82,11 @@ export async function getUserStrategyJson(id?: string) {
   }
 }
 
-export async function getVecById(id: string) {
-  const user = await prisma.user.findUnique({
-    where: { uid: id },
-    select: { vec: true }
-  });
-  return user?.vec;
+export async function getVecById(id: string): Promise<string | null> {
+  const results = await prisma.$queryRaw<Array<{ vec: string | null }>>`
+    SELECT vec::text FROM "User" WHERE uid = ${id} LIMIT 1;
+  `;
+  return results[0]?.vec ?? null;
 }
 
 export async function updateUserById(
@@ -111,4 +110,14 @@ export async function updateUserById(
       createdAt: true
     }
   });
+}
+
+export async function updateUserVec(id: string, vec: number[] | Float32Array) {
+  const vecArray = Array.isArray(vec) ? vec : Array.from(vec);
+  const vectorStr = `[${vecArray.join(",")}]`;
+  await prisma.$executeRaw`
+    UPDATE "User"
+    SET vec = ${vectorStr}::vector
+    WHERE uid = ${id};
+  `;
 }
