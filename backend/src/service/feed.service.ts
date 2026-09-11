@@ -2,26 +2,27 @@ import { getRandomPostsSample, getPostRecommendations, getPosts } from "../repo/
 import { getUserStrategyJson } from "../repo/user.repo.js";
 import { prisma } from "../db.js";
 import { UserReact, FeedOptions } from "@epsilonfeed/shared";
-import { strategy } from "sharp";
 import feedPolicy from "./feedPolicy/index.js";
 export type { UserReact, FeedOptions };
 
 /**
  * Serves non-deterministic / randomized feed posts for infinite scrolling
  */
- export async function getFeedByUser(uid: string) {
-   const { strategy: rawStrategy, params } = await getUserStrategyJson(uid);
+export async function getFeedByUser(uid?: string, options: FeedOptions = {}) {
+  const strategyConfig = uid ? await getUserStrategyJson(uid) : null;
+  const rawStrategy = strategyConfig?.strategy;
+  const params = strategyConfig?.params;
 
-   // 1. 如果 rawStrategy 存在且在 table 內，就取該 handler，否則 fallback 回 default
-   const strategy = (rawStrategy ? feedPolicy[rawStrategy] : undefined) ?? feedPolicy.default;
+  // 1. 如果 rawStrategy 存在且在 table 內，就取該 handler，否則 fallback 回 default
+  const strategy = (rawStrategy && feedPolicy[rawStrategy] ? feedPolicy[rawStrategy] : undefined) ?? feedPolicy.default;
 
-   // 2. 雙重保險：如果連 feedPolicy.default 都沒配，直接拋明確錯誤避免 TypeError
-   if (!strategy) {
-     throw new Error('Default feed strategy is not configured.');
-   }
+  // 2. 雙重保險：如果連 feedPolicy.default 都沒配，直接拋明確錯誤避免 TypeError
+  if (!strategy) {
+    throw new Error('Default feed strategy is not configured.');
+  }
 
-   return strategy(uid, params);
- }
+  return strategy(uid, params, options);
+}
 /**
  * Returns "You May Also Like" post recommendations for the bottom of a post
  */

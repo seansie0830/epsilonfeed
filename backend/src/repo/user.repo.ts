@@ -64,12 +64,22 @@ export async function createUser(data: {
   });
 }
 
-export async function getUserStrategyJson(id: string) {
+export async function getUserStrategyJson(id?: string) {
+  if (!id) return null;
   const user = await prisma.user.findUnique({
     where: { uid: id },
     select: { strategy: true }
   });
-  return user?.strategy ? JSON.parse(user.strategy) : null;
+  if (!user?.strategy) return null;
+  try {
+    const parsed = JSON.parse(user.strategy);
+    if (typeof parsed === "object" && parsed !== null) {
+      return parsed;
+    }
+    return { strategy: String(parsed) };
+  } catch {
+    return { strategy: user.strategy };
+  }
 }
 
 export async function getVecById(id: string) {
