@@ -69,6 +69,14 @@
   @apply bg-slate-900/90 border border-slate-800 rounded-xl p-4 my-3 overflow-x-auto text-xs md:text-sm font-mono shadow-inner;
 }
 
+.markdown-body .katex-display {
+  @apply my-4 overflow-x-auto overflow-y-hidden py-1 text-slate-100 text-center;
+}
+
+.markdown-body .katex {
+  @apply text-slate-100;
+}
+
 .markdown-body table {
   @apply w-full text-left border-collapse my-3 text-xs md:text-sm;
 }

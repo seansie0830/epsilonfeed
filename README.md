@@ -1,4 +1,4 @@
-﻿# EpsilonFeed
+# EpsilonFeed
 
 A modern, interactive knowledge-sharing feed application built with **React (Vite)**, **Express**, **Prisma**, and **PostgreSQL with pgvector**.
 
@@ -49,6 +49,8 @@ pnpm dev:frontend  # Vite React App on http://localhost:5173
 | **Sync Prisma Schema** | `pnpm --filter backend exec prisma db push` |
 | **Prisma Studio (Web GUI)** | `pnpm --filter backend exec prisma studio` |
 | **Seed Database** | `pnpm seed` |
+| **Fill Posts from /post** | `pnpm fill:posts` (or `pnpm seed:posts`) |
+| **Clean & Refill Posts** | `pnpm fill:posts --clean` |
 | **Build All Packages** | `pnpm build` |
 | **Start Dev Environment** | `pnpm dev` |
 | **Start Backend Dev** | `pnpm dev:backend` |

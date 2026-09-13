@@ -10,6 +10,9 @@
     "build": "pnpm -r build",
     "build:shared": "pnpm --filter @epsilonfeed/shared run build",
     "seed": "pnpm --filter backend run db:seed",
+    "seed:posts": "pnpm --filter backend run db:seed:posts",
+    "fill:posts": "pnpm --filter backend run db:fill:posts",
+    "db:fill:posts": "pnpm --filter backend run db:fill:posts",
     "test": "echo \"Tests completed\""
   },
   "keywords": [],

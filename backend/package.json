@@ -9,7 +9,9 @@
     "start": "node dist/index.js",
     "db:migrate": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
-    "db:seed": "tsx src/seed.ts"
+    "db:seed": "tsx src/seed.ts",
+    "db:fill:posts": "tsx src/fill-posts.ts",
+    "db:seed:posts": "tsx src/fill-posts.ts"
   },
   "keywords": [],
   "author": "",
