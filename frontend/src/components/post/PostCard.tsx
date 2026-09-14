@@ -133,7 +133,8 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <article
       id={`post-${post.uid}`}
-      className="group relative my-4 rounded-2xl glass-card border border-slate-800/80 hover:border-slate-700/80 p-5 transition-all shadow-xl"
+      className="group relative my-4 rounded-2xl glass-card border border-slate-800/80 hover:border-slate-700/80 transition-all shadow-xl"
+      style={{ padding: "var(--reading-card-padding, 1.25rem)" }}
     >
       {/* Header Info */}
       <div className="flex items-start justify-between gap-3 mb-3">

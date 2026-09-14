@@ -13,6 +13,8 @@
     "seed:posts": "pnpm --filter backend run db:seed:posts",
     "fill:posts": "pnpm --filter backend run db:fill:posts",
     "db:fill:posts": "pnpm --filter backend run db:fill:posts",
+    "fill:vec": "pnpm --filter backend run fill:vec",
+    "db:fill:vec": "pnpm --filter backend run fill:vec",
     "test": "echo \"Tests completed\""
   },
   "keywords": [],

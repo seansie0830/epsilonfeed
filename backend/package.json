@@ -11,7 +11,9 @@
     "db:generate": "prisma generate",
     "db:seed": "tsx src/seed.ts",
     "db:fill:posts": "tsx src/fill-posts.ts",
-    "db:seed:posts": "tsx src/fill-posts.ts"
+    "db:seed:posts": "tsx src/fill-posts.ts",
+    "fill:vec": "tsx src/fill-vec.ts",
+    "db:fill:vec": "tsx src/fill-vec.ts"
   },
   "keywords": [],
   "author": "",

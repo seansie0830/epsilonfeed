@@ -10,11 +10,13 @@ import {
   Tag as TagIcon,
   Sparkles,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Type
 } from "lucide-react";
 import { MarkdownView } from "../components/post/MarkdownView.js";
 import { PostEditor } from "../components/post/PostEditor.js";
 import { PostRecommendations } from "../components/post/PostRecommendations.js";
+import { DisplaySettingsPopover } from "../components/layout/DisplaySettingsPopover.js";
 import { Post, User } from "../types/index.js";
 import { api } from "../services/api.js";
 
@@ -243,6 +245,24 @@ export const PostDetailPage: React.FC<PostDetailPageProps> = ({ currentUser }) =
                 />
                 <span className="font-semibold text-xs">{reactionsCount}</span>
               </button>
+
+              {/* Quick Reading Settings */}
+              <DisplaySettingsPopover
+                customTrigger={(open, toggle) => (
+                  <button
+                    type="button"
+                    onClick={toggle}
+                    title="調整閱讀字體與間距"
+                    className={`p-2 rounded-xl border text-xs transition-all active:scale-95 ${
+                      open
+                        ? "bg-brand-600 border-brand-500 text-white shadow-md shadow-brand-500/20"
+                        : "bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-300 hover:text-white"
+                    }`}
+                  >
+                    <Type className="w-4 h-4 text-brand-400" />
+                  </button>
+                )}
+              />
 
               <button
                 type="button"

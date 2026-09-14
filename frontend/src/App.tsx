@@ -4,6 +4,7 @@ import { Header } from "./components/layout/Header.js";
 import { FeedPage } from "./pages/FeedPage.js";
 import { PostDetailPage } from "./pages/PostDetailPage.js";
 import { AuthModal } from "./components/auth/AuthModal.js";
+import { DisplaySettingsProvider } from "./context/DisplaySettingsContext.js";
 import { User } from "./types/index.js";
 import { api } from "./services/api.js";
 
@@ -112,9 +113,11 @@ function AppContent() {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <DisplaySettingsProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </DisplaySettingsProvider>
   );
 }
 

@@ -7,10 +7,13 @@ import {
   Users,
   Check,
   X,
-  Sparkles
+  Sparkles,
+  SlidersHorizontal,
+  Type
 } from "lucide-react";
 import { Tag, User } from "../../types/index.js";
 import { api } from "../../services/api.js";
+import { useDisplaySettings, FontSize, LineSpacing } from "../../context/DisplaySettingsContext.js";
 
 interface SidebarProps {
   activeMode: "random" | "latest";
@@ -31,6 +34,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [trendingTags, setTrendingTags] = useState<Tag[]>([]);
   const [demoUsers, setDemoUsers] = useState<User[]>([]);
+  const { settings, setFontSize, setLineSpacing, fontSizeConfig, lineSpacingConfig } =
+    useDisplaySettings();
 
   useEffect(() => {
     async function loadData() {
@@ -138,6 +143,69 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Reading & Spacing Preferences Quick Controls */}
+      <div className="glass-panel p-4 rounded-2xl">
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+          <SlidersHorizontal className="w-3.5 h-3.5 text-brand-400" />
+          <span>閱讀與版面偏好</span>
+        </h3>
+
+        {/* Font Size Quick Selector */}
+        <div className="mb-3">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+            <span className="flex items-center gap-1">
+              <Type className="w-3 h-3 text-brand-400" />
+              <span>字體大小</span>
+            </span>
+            <span className="font-mono text-brand-300">
+              {fontSizeConfig[settings.fontSize].px}
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-1">
+            {(["sm", "md", "lg", "xl"] as FontSize[]).map((size) => (
+              <button
+                key={size}
+                type="button"
+                onClick={() => setFontSize(size)}
+                className={`py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                  settings.fontSize === size
+                    ? "bg-brand-600 text-white border-brand-500 shadow-sm"
+                    : "bg-slate-800/60 hover:bg-slate-800 text-slate-300 border-slate-700/50"
+                }`}
+              >
+                {fontSizeConfig[size].label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Line Spacing Quick Selector */}
+        <div>
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5">
+            <span>行距 / 行高</span>
+            <span className="font-mono text-indigo-300">
+              {lineSpacingConfig[settings.lineSpacing].desc}
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            {(["compact", "normal", "relaxed"] as LineSpacing[]).map((spacing) => (
+              <button
+                key={spacing}
+                type="button"
+                onClick={() => setLineSpacing(spacing)}
+                className={`py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                  settings.lineSpacing === spacing
+                    ? "bg-indigo-600 text-white border-indigo-500 shadow-sm"
+                    : "bg-slate-800/60 hover:bg-slate-800 text-slate-300 border-slate-700/50"
+                }`}
+              >
+                {lineSpacingConfig[spacing].label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

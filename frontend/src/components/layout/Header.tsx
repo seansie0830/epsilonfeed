@@ -1,6 +1,7 @@
 import React from "react";
 import { Search, PlusCircle, LogIn, LogOut, Radio, ShieldCheck } from "lucide-react";
 import { User } from "../../types/index.js";
+import { DisplaySettingsPopover } from "./DisplaySettingsPopover.js";
 
 interface HeaderProps {
   currentUser?: User | null;
@@ -62,7 +63,10 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Action Controls & Active User Profile */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Typography & Spacing Display Settings */}
+          <DisplaySettingsPopover />
+
           {isAdmin && (
             <button
               type="button"

@@ -256,7 +256,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               )}
             </div>
           ) : (
-            <div className="space-y-4">
+            <div
+              className="flex flex-col transition-all"
+              style={{ gap: "var(--reading-card-spacing, 1rem)" }}
+            >
               {posts.map((post) => (
                 <PostPreviewCard
                   key={post.feedItemId || post.uid}

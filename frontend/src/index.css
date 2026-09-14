@@ -28,73 +28,180 @@
   background: rgba(99, 102, 241, 0.6);
 }
 
+:root {
+  --reading-font-size: 16px;
+  --reading-line-height: 1.7;
+  --reading-paragraph-spacing: 0.875rem;
+  --reading-card-spacing: 1rem;
+  --reading-card-padding: 1.25rem;
+}
+
 /* Markdown Typography Styles */
 .markdown-body {
-  @apply text-slate-200 leading-relaxed text-sm md:text-base;
+  font-size: var(--reading-font-size, 16px);
+  line-height: var(--reading-line-height, 1.7);
+  color: rgb(226 232 240);
+  transition: font-size 0.15s ease, line-height 0.15s ease;
 }
 
 .markdown-body h1 {
-  @apply text-xl md:text-2xl font-bold text-white mt-4 mb-3 pb-2 border-b border-slate-800 tracking-tight;
+  font-size: calc(var(--reading-font-size, 16px) * 1.55);
+  line-height: 1.25;
+  font-weight: 700;
+  color: #fff;
+  margin-top: calc(var(--reading-paragraph-spacing, 0.875rem) * 1.6);
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(30 41 59);
+  letter-spacing: -0.025em;
 }
 
 .markdown-body h2 {
-  @apply text-lg md:text-xl font-bold text-white mt-4 mb-2 tracking-tight;
+  font-size: calc(var(--reading-font-size, 16px) * 1.35);
+  line-height: 1.3;
+  font-weight: 700;
+  color: #fff;
+  margin-top: calc(var(--reading-paragraph-spacing, 0.875rem) * 1.4);
+  margin-bottom: calc(var(--reading-paragraph-spacing, 0.875rem) * 0.75);
+  letter-spacing: -0.025em;
 }
 
 .markdown-body h3 {
-  @apply text-base md:text-lg font-semibold text-slate-100 mt-3 mb-2;
+  font-size: calc(var(--reading-font-size, 16px) * 1.18);
+  line-height: 1.35;
+  font-weight: 600;
+  color: rgb(241 245 249);
+  margin-top: calc(var(--reading-paragraph-spacing, 0.875rem) * 1.2);
+  margin-bottom: calc(var(--reading-paragraph-spacing, 0.875rem) * 0.5);
 }
 
 .markdown-body p {
-  @apply mb-3 leading-relaxed;
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  line-height: var(--reading-line-height, 1.7);
 }
 
 .markdown-body ul {
-  @apply list-disc list-inside mb-3 space-y-1 text-slate-300;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  line-height: var(--reading-line-height, 1.7);
+}
+
+.markdown-body ul > * + * {
+  margin-top: calc(var(--reading-paragraph-spacing, 0.875rem) * 0.25);
 }
 
 .markdown-body ol {
-  @apply list-decimal list-inside mb-3 space-y-1 text-slate-300;
+  list-style-type: decimal;
+  list-style-position: inside;
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  line-height: var(--reading-line-height, 1.7);
+}
+
+.markdown-body ol > * + * {
+  margin-top: calc(var(--reading-paragraph-spacing, 0.875rem) * 0.25);
 }
 
 .markdown-body blockquote {
-  @apply border-l-4 border-brand-500 pl-4 py-1 my-3 bg-slate-900/60 rounded-r-lg text-slate-300 italic;
+  border-left-width: 4px;
+  border-color: rgb(99 102 241);
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-top: var(--reading-paragraph-spacing, 0.875rem);
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  background-color: rgba(99, 102, 241, 0.05);
+  border-radius: 0 0.75rem 0.75rem 0;
+  color: rgb(203 213 225);
+  font-style: italic;
+  line-height: var(--reading-line-height, 1.7);
 }
 
 .markdown-body code:not(pre code) {
-  @apply bg-slate-800 text-brand-300 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-700/50;
+  background-color: rgb(30 41 59);
+  color: rgb(165 180 252);
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  border-radius: 0.25rem;
+  font-size: calc(var(--reading-font-size, 16px) * 0.85);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  border: 1px solid rgba(51, 65, 85, 0.5);
 }
 
 .markdown-body pre {
-  @apply bg-slate-900/90 border border-slate-800 rounded-xl p-4 my-3 overflow-x-auto text-xs md:text-sm font-mono shadow-inner;
+  background-color: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgb(30 41 59);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: var(--reading-paragraph-spacing, 0.875rem);
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  overflow-x: auto;
+  font-size: calc(var(--reading-font-size, 16px) * 0.88);
+  line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .markdown-body .katex-display {
-  @apply my-4 overflow-x-auto overflow-y-hidden py-1 text-slate-100 text-center;
+  margin-top: var(--reading-paragraph-spacing, 0.875rem);
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  color: rgb(241 245 249);
+  text-align: center;
 }
 
 .markdown-body .katex {
-  @apply text-slate-100;
+  color: rgb(241 245 249);
 }
 
 .markdown-body table {
-  @apply w-full text-left border-collapse my-3 text-xs md:text-sm;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  margin-top: var(--reading-paragraph-spacing, 0.875rem);
+  margin-bottom: var(--reading-paragraph-spacing, 0.875rem);
+  font-size: calc(var(--reading-font-size, 16px) * 0.9);
 }
 
 .markdown-body th {
-  @apply bg-slate-900 border border-slate-800 p-2.5 font-semibold text-slate-200;
+  background-color: rgb(15 23 42);
+  border: 1px solid rgb(30 41 59);
+  padding: 0.625rem;
+  font-weight: 600;
+  color: rgb(226 232 240);
 }
 
 .markdown-body td {
-  @apply border border-slate-800/80 p-2 text-slate-300;
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  padding: 0.5rem;
+  color: rgb(203 213 225);
 }
 
 .markdown-body a {
-  @apply text-brand-400 hover:text-brand-300 underline underline-offset-4 decoration-brand-500/40 hover:decoration-brand-400 transition-colors;
+  color: rgb(129 140 248);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(99, 102, 241, 0.4);
+  transition-property: color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.markdown-body a:hover {
+  color: rgb(165 180 252);
+  text-decoration-color: rgb(129 140 248);
 }
 
 .markdown-body input[type="checkbox"] {
-  @apply mr-2 rounded border-slate-700 bg-slate-800 text-brand-500 focus:ring-0 focus:ring-offset-0;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
+  border-color: rgb(51 65 85);
+  background-color: rgb(30 41 59);
+  color: rgb(99 102 241);
 }
 
 .glass-panel {

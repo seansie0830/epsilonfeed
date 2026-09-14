@@ -125,7 +125,10 @@ export const PostPreviewCard: React.FC<PostPreviewCardProps> = ({
     )}`;
 
   return (
-    <article className="group relative my-4 rounded-2xl glass-card border border-slate-800/80 hover:border-brand-500/40 p-5 transition-all shadow-xl hover:shadow-2xl hover:shadow-brand-500/5">
+    <article
+      className="group relative rounded-2xl glass-card border border-slate-800/80 hover:border-brand-500/40 transition-all shadow-xl hover:shadow-2xl hover:shadow-brand-500/5"
+      style={{ padding: "var(--reading-card-padding, 1.25rem)" }}
+    >
       {/* Header Info */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-3">
@@ -170,11 +173,20 @@ export const PostPreviewCard: React.FC<PostPreviewCardProps> = ({
       <Link to={`/post/${post.uid}`} className="block group/link cursor-pointer">
         <div className="flex flex-col sm:flex-row gap-4 items-start justify-between">
           <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-bold text-white group-hover/link:text-brand-300 transition-colors line-clamp-2 mb-2 leading-snug">
+            <h3
+              className="font-bold text-white group-hover/link:text-brand-300 transition-colors line-clamp-2 mb-2 leading-snug"
+              style={{ fontSize: "calc(var(--reading-font-size, 16px) * 1.15)" }}
+            >
               {title}
             </h3>
 
-            <p className="text-xs sm:text-sm text-slate-300 line-clamp-3 leading-relaxed mb-3">
+            <p
+              className="text-slate-300 line-clamp-3 mb-3 transition-all"
+              style={{
+                fontSize: "calc(var(--reading-font-size, 16px) * 0.9)",
+                lineHeight: "var(--reading-line-height, 1.7)"
+              }}
+            >
               {cleanSnippet ? `${cleanSnippet}...` : "Click to view full post and markdown content."}
             </p>
           </div>
